@@ -68,14 +68,13 @@ public class WinDriverService {
     }
 
     public ElementLocationControlResponse find(ElementLocationControlRequest request) {
-        log.info("Trying to find element using request: " +convertObjectToString(request));
+        log.info("Trying to find element using request: " + convertObjectToString(request));
         String url = urlBuilder.addAgentHeadURL().addSubItem("WinAuto").addSubItem("AutomationElementLocations").buildURL();
         ResponseEntity<ElementLocationControlResponse> response = restTemplate.postForEntity(url, request, ElementLocationControlResponse.class);
 
         List<WinDriverElement> resultList = response.getBody().getWinDriverElements();
         if (resultList.isEmpty()) throw new WinDriverElementNotFoundException();
-        else resultList.forEach(element -> element.initController(this));
-
+        else for (WinDriverElement element : resultList) element.initController(this);
         return response.getBody();
     }
 
