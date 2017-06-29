@@ -11,9 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import ua.windriver.model.automation.*;
 import ua.windriver.model.exception.WinDriverElementNotFoundException;
-import ua.windriver.model.request.ActionControlRequest;
-import ua.windriver.model.request.ApplicationControlRequest;
-import ua.windriver.model.request.ElementLocationControlRequest;
+import ua.windriver.model.request.*;
 import ua.windriver.model.response.ActionControlResponse;
 import ua.windriver.model.response.ApplicationControlResponse;
 import ua.windriver.model.response.ElementLocationControlResponse;
@@ -54,10 +52,38 @@ public class WinDriverService {
         return null;
     }
 
-    public WinDriverApplication launch(StartMethodNameOption methodName, String executable, String processName) {
-        log.info("Launching app with arguments [" + methodName + ", " + executable + ", " + processName + "]");
+    public WinDriverApplication launchByExecutable(String executable, String processName) {
+        log.info("Launch app by executable method");
         String url = urlBuilder.addAgentHeadURL().addSubItem("WinAuto").addSubItem("Applications").buildURL();
-        ApplicationControlRequest request = new ApplicationControlRequest(methodName, executable, processName);
+        ApplicationControlRequest request = new LaunchByExecutableRequest(executable, processName);
+        return restTemplate.postForObject(url, request, ApplicationControlResponse.class).getWinDriverApplication();
+    }
+
+    public WinDriverApplication launchByExecutable(String executable, String processName, String arguments) {
+        log.info("Launch app by executable method with arguments [" + arguments + "]");
+        String url = urlBuilder.addAgentHeadURL().addSubItem("WinAuto").addSubItem("Applications").buildURL();
+        ApplicationControlRequest request = new LaunchByExecutableRequest(executable, processName, arguments);
+        return restTemplate.postForObject(url, request, ApplicationControlResponse.class).getWinDriverApplication();
+    }
+
+    public WinDriverApplication attachToProcessByProcessId(Integer processId) {
+        log.info("Attach to process by process id [" + processId + "]");
+        String url = urlBuilder.addAgentHeadURL().addSubItem("WinAuto").addSubItem("Applications").buildURL();
+        ApplicationControlRequest request = new AttachToProcessByProcessIdRequest(processId);
+        return restTemplate.postForObject(url, request, ApplicationControlResponse.class).getWinDriverApplication();
+    }
+
+    public WinDriverApplication attachToProcessByProcessName(String processName) {
+        log.info("Attach to process by process name [" + processName + "]");
+        String url = urlBuilder.addAgentHeadURL().addSubItem("WinAuto").addSubItem("Applications").buildURL();
+        ApplicationControlRequest request = new AttachToProcessByProcessNameRequest(processName);
+        return restTemplate.postForObject(url, request, ApplicationControlResponse.class).getWinDriverApplication();
+    }
+
+    public WinDriverApplication attachOrLaunchByProcessName(String processName) {
+        log.info("Attach to process by process name [" + processName + "]");
+        String url = urlBuilder.addAgentHeadURL().addSubItem("WinAuto").addSubItem("Applications").buildURL();
+        ApplicationControlRequest request = new AttachOrLaunchByProcessNameRequest(processName);
         return restTemplate.postForObject(url, request, ApplicationControlResponse.class).getWinDriverApplication();
     }
 
