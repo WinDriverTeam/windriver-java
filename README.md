@@ -107,13 +107,12 @@ Now we can use custom class with all additional functionality:
 ```java
 WinDriverService service = new WinDriverService();
 service.setWinDriverElementType(CustomWinDriverElement.class);
-
-WinDriverApplication app = service.launchByExecutable("calc", "Calculator");
+service.launchByExecutable("calc", "Calculator");
 
 CustomWinDriverElement calculatorWindow = service.getWindow(new PropertyConditions(Property.NAME_PROPERTY, "Calculator"));
 CustomWinDriverElement btn = calculatorWindow.findOne(new PropertyConditions(Property.AUTOMATION_ID_PROPERTY, "num1Button"));
 
-btn.click("Number One");
+btn.click();
 ```
 Output:
 ```
