@@ -2,21 +2,21 @@ package ua.windriver.model.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import ua.windriver.model.automation.WinDriverElement;
 
 import java.util.List;
+import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ElementLocationControlResponse {
 
     @JsonProperty("AutomationElementWrappers")
-    private List<WinDriverElement> winDriverElements;
+    private List<Map> payload;
 
-    public List<WinDriverElement> getWinDriverElements() {
-        return winDriverElements;
+    public List<Map> getPayload() {
+        return payload;
     }
-    public void setWinDriverElements(List<WinDriverElement> winDriverElements) {
-        this.winDriverElements = winDriverElements;
+    public void setPayload(List<Map> payload) {
+        this.payload = payload;
     }
 
     @Override
@@ -26,12 +26,12 @@ public class ElementLocationControlResponse {
 
         ElementLocationControlResponse response = (ElementLocationControlResponse) o;
 
-        return winDriverElements != null ? winDriverElements.equals(response.winDriverElements) : response.winDriverElements == null;
+        return payload != null ? payload.equals(response.payload) : response.payload == null;
 
     }
 
     @Override
     public int hashCode() {
-        return winDriverElements != null ? winDriverElements.hashCode() : 0;
+        return payload != null ? payload.hashCode() : 0;
     }
 }

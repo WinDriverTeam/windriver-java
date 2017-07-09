@@ -1,14 +1,13 @@
 package ua.windriver.core;
 
-import ua.windriver.model.automation.Action;
-import ua.windriver.model.automation.FindOption;
-import ua.windriver.model.automation.Property;
-import ua.windriver.model.automation.SearchScopeOption;
+import ua.windriver.model.automation.*;
 import ua.windriver.model.request.ActionControlRequest;
 import ua.windriver.model.request.ElementLocationControlRequest;
 import ua.windriver.model.response.ActionControlResponse;
-import ua.windriver.model.response.ElementLocationControlResponse;
 import ua.windriver.util.PropertyConditions;
+
+import java.util.List;
+import java.util.Map;
 
 public class WinDriverElementController {
 
@@ -19,39 +18,42 @@ public class WinDriverElementController {
         return service;
     }
 
-    public WinDriverElementController(WinDriverService service, String parentElementId){
+    public WinDriverElementController(WinDriverService service, String parentElementId) {
         this.service = service;
         this.parentElementId = parentElementId;
     }
 
-    public ElementLocationControlResponse findOne(PropertyConditions conditions) {
+    public <T extends WinDriverElement> T findOne(PropertyConditions conditions) {
         ElementLocationControlRequest request = new ElementLocationControlRequest();
         request.setTreeWalkerType("");
         request.setSearchScope(SearchScopeOption.SUBTREE);
         request.setFindOption(FindOption.FIND_FIRST);
         request.setParentWinDriverElementId(parentElementId);
         request.setConditionModels(conditions.getConditions());
-        return service.find(request);
+        Map result = service.find(request).getPayload().get(0);
+        return service.convertMapToWinDriverObject(result, service.getWinDriverElementType());
     }
 
-    public ElementLocationControlResponse findAll(PropertyConditions conditions) {
+    public <T extends WinDriverElement> List<T> findAll(PropertyConditions conditions) {
         ElementLocationControlRequest request = new ElementLocationControlRequest();
         request.setTreeWalkerType("");
         request.setSearchScope(SearchScopeOption.SUBTREE);
         request.setFindOption(FindOption.FIND_ALL);
         request.setParentWinDriverElementId(parentElementId);
         request.setConditionModels(conditions.getConditions());
-        return service.find(request);
+        List<Map> resultSet = service.find(request).getPayload();
+        return service.convertResultSet(resultSet, service.getWinDriverElementType());
     }
 
-    public ElementLocationControlResponse findAllChildrenItems() {
+    public <T extends WinDriverElement> List<T> findAllChildrenItems() {
         ElementLocationControlRequest request = new ElementLocationControlRequest();
         request.setTreeWalkerType("");
         request.setSearchScope(SearchScopeOption.CHILDREN);
         request.setFindOption(FindOption.FIND_ALL);
         request.setParentWinDriverElementId(parentElementId);
         request.setConditionModels(new PropertyConditions(Property.TRUE_CONDITION, "").getConditions());
-        return service.find(request);
+        List<Map> resultSet = service.find(request).getPayload();
+        return service.convertResultSet(resultSet, service.getWinDriverElementType());
     }
 
     public ActionControlResponse click() {
@@ -65,7 +67,7 @@ public class WinDriverElementController {
         ActionControlRequest request = new ActionControlRequest();
         request.setAction(Action.DOUBLE_CLICK);
         request.setWinDriverElementId(parentElementId);
-        return  service.interact(request);
+        return service.interact(request);
     }
 
     public ActionControlResponse clickAtClickablePoint() {

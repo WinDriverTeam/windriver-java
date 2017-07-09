@@ -10,8 +10,8 @@ import java.util.List;
 
 public class WinDriverElement {
 
-    private WinDriverElementController controller;
-    private AutomationElementWrapper element;
+    protected WinDriverElementController controller;
+    protected AutomationElementWrapper element;
 
     @JsonCreator
     public WinDriverElement(AutomationElementWrapper element) {
@@ -39,15 +39,15 @@ public class WinDriverElement {
     }
 
     public WinDriverElement findOne(PropertyConditions conditions) {
-        return controller.findOne(conditions).getWinDriverElements().get(0);
+        return controller.findOne(conditions);
     }
 
     public List<WinDriverElement> findAll(PropertyConditions conditions) {
-        return controller.findAll(conditions).getWinDriverElements();
+        return controller.findAll(conditions);
     }
 
     public List<WinDriverElement> findAllChildrenItems() {
-        return controller.findAllChildrenItems().getWinDriverElements();
+        return controller.findAllChildrenItems();
     }
 
     public ActionControlResponse click() {
