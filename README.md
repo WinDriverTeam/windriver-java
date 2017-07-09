@@ -50,7 +50,7 @@ To see how to launch agent click [here](https://github.com/WinDriverTeam/windriv
 Launching an Calculator instance:
 ```java
 WinDriverService service = new WinDriverService();
-WinDriverApplication app =  service.launch(StartMethodNameOption.LAUNCH_BY_EXECUTABLE, "Calc", "Calculator");
+WinDriverApplication app =  service.launchByExecutable("calc", "Calculator");
 ```
 **Note:** WinDriver agent works very fast, so to prevent different potential problems, please use some wait solutions after launching the application and between resource-consuming operations.
 
@@ -66,9 +66,57 @@ buttonOne.click();
 Closing Calculator instance:
 ```java
 WinDriverService service = new WinDriverService();
-WinDriverApplication app =  service.launch(StartMethodNameOption.LAUNCH_BY_EXECUTABLE, "Calc", "Calculator");
+WinDriverApplication app =  service.launchByExecutable("calc", "Calculator");
 //some code
 service.shutdown(app.getWinDriverElementId());
 ```
+### Extending WinDriverElement
+Custom windriver element can be used for logging purposes etc.
+Let's create a custom class and add simple logging functionality:
+```java
+import com.fasterxml.jackson.annotation.JsonCreator;
+import ua.windriver.model.automation.AutomationElementWrapper;
+import ua.windriver.model.automation.WinDriverElement;
+import ua.windriver.model.response.ActionControlResponse;
+import ua.windriver.util.PropertyConditions;
 
+public class CustomWinDriverElement extends WinDriverElement {
+    @JsonCreator
+    public CustomWinDriverElement(AutomationElementWrapper element) {
+        super(element);
+    }
 
+    @Override
+    public <T extends WinDriverElement> T findOne(PropertyConditions conditions) {
+        System.out.println("Trying to find element using condition: " + conditions.getConditions());
+        return controller.findOne(conditions);
+    }
+    @Override
+    public ActionControlResponse click() {
+        System.out.println("Clicking at element with name '" + element.getName() + "'");
+        return controller.click();
+    }
+}
+```
+We need to tell WinDriverService to use CustomWinDriverElement.class instead of WinDriverElement.class:
+```java
+ WinDriverService service = new WinDriverService();
+ service.setWinDriverElementType(CustomWinDriverElement.class);
+```
+Now we can use custom class with all additional functionality:
+```java
+WinDriverService service = new WinDriverService();
+service.setWinDriverElementType(CustomWinDriverElement.class);
+
+WinDriverApplication app = service.launchByExecutable("calc", "Calculator");
+
+CustomWinDriverElement calculatorWindow = service.getWindow(new PropertyConditions(Property.NAME_PROPERTY, "Calculator"));
+CustomWinDriverElement btn = calculatorWindow.findOne(new PropertyConditions(Property.AUTOMATION_ID_PROPERTY, "num1Button"));
+
+btn.click("Number One");
+```
+Output:
+```
+Trying to find element using condition: [Condition{name=AUTOMATION_ID_PROPERTY, value='num1Button'}]
+Clicking at element with name 'One'
+```
