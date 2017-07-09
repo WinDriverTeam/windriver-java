@@ -38,15 +38,15 @@ public class WinDriverElement {
         this.element = element;
     }
 
-    public WinDriverElement findOne(PropertyConditions conditions) {
+    public <T extends WinDriverElement> T findOne(PropertyConditions conditions) {
         return controller.findOne(conditions);
     }
 
-    public List<WinDriverElement> findAll(PropertyConditions conditions) {
+    public <T extends WinDriverElement> List<T> findAll(PropertyConditions conditions) {
         return controller.findAll(conditions);
     }
 
-    public List<WinDriverElement> findAllChildrenItems() {
+    public <T extends WinDriverElement> List<T> findAllChildrenItems() {
         return controller.findAllChildrenItems();
     }
 

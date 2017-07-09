@@ -142,7 +142,7 @@ public class WinDriverService {
 
     public <T extends WinDriverElement> List<T> convertResultSet(List<Map> list, Class<? extends WinDriverElement> cls) {
         List<T> resultList = new ArrayList<>();
-        for (Map result : list) resultList.add(convertMapToWinDriverObject(result, cls));
+        for (Map result : list) resultList.add((T) convertMapToWinDriverObject(result, cls));
         return resultList;
     }
 
