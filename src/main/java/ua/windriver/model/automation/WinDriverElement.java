@@ -3,7 +3,6 @@ package ua.windriver.model.automation;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import ua.windriver.core.WinDriverElementController;
 import ua.windriver.core.WinDriverService;
-import ua.windriver.model.response.ActionControlResponse;
 import ua.windriver.util.PropertyConditions;
 
 import java.util.List;
@@ -50,31 +49,53 @@ public class WinDriverElement {
         return controller.findAllChildrenItems();
     }
 
-    public ActionControlResponse click() {
-        return controller.click();
+    public WinDriverElement click() {
+        controller.click();
+        return this;
     }
 
-    public ActionControlResponse doubleClick() {
-        return controller.doubleClick();
+    public WinDriverElement doubleClick() {
+        controller.doubleClick();
+        return this;
     }
 
-    public ActionControlResponse clickAtClickablePoint() {
-        return controller.clickAtClickablePoint();
+    public WinDriverElement clickAtClickablePoint() {
+        controller.clickAtClickablePoint();
+        return this;
     }
 
-    public ActionControlResponse sendKeys(String value) {
-        return controller.sendKeys(value);
+    public WinDriverElement sendKeys(String value) {
+        controller.sendKeys(value);
+        return this;
     }
 
     public String getText() {
         return String.valueOf(controller.getText().getEntity());
     }
 
-    public ActionControlResponse moveMouse() {
-        return controller.moveMouse();
+    public WinDriverElement moveMouse() {
+        controller.moveMouse();
+        return this;
     }
 
-    public ActionControlResponse rightClick() {
-        return controller.rightClick();
+    public WinDriverElement rightClick() {
+        controller.rightClick();
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WinDriverElement element1 = (WinDriverElement) o;
+
+        return element != null ? element.equals(element1.element) : element1.element == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return element != null ? element.hashCode() : 0;
     }
 }
