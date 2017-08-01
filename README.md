@@ -26,8 +26,12 @@ A Java client for the [WinDriver Agent](https://github.com/WinDriverTeam/windriv
 
 # Usage Prerequisites
 To use it, add the jar file to your project build path. Jar file will appear in folder 'target', after execution following command:
-```bash
-mvn clean compile assembly:single
+```xml
+<dependency>
+    <groupId>com.github.windriverteam</groupId>
+    <artifactId>windriver-java</artifactId>
+    <version>0.1.0</version>
+</dependency>
 ```
 
 When jar file is added to the project, **windriver.properties** file should be created under 'src/main/resources'.
