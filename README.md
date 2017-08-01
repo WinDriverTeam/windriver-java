@@ -34,7 +34,7 @@ To use it, add windriver-java to your build tool dependencies (e.g. maven):
 </dependency>
 ```
 
-When jar dependency is added to the project, **windriver.properties** file should be created under 'src/main/resources'.
+When dependency is added to the project, **windriver.properties** file has to be created in 'src/main/resources'.
 This file should contain such properties:
 ```
 agent.url.connection.type={type of agent url connection}
