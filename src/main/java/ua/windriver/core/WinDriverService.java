@@ -129,8 +129,38 @@ public class WinDriverService {
         return find(request);
     }
 
+    private ElementLocationControlResponse findWindowsByScopeOption(PropertyConditions conditions, SearchScopeOption scopeOption) {
+        ElementLocationControlRequest request = new ElementLocationControlRequest();
+        request.setTreeWalkerType("");
+        request.setSearchScope(scopeOption);
+        request.setParentWinDriverElementId("");
+        request.setFindOption(FindOption.FIND_ALL);
+        request.setConditionModels(conditions.getConditions());
+        return find(request);
+    }
+
+    private ElementLocationControlResponse findWindowsByRootNode(PropertyConditions conditions, WinDriverElement root, SearchScopeOption scopeOption) {
+        ElementLocationControlRequest request = new ElementLocationControlRequest();
+        request.setTreeWalkerType("");
+        request.setSearchScope(scopeOption);
+        request.setParentWinDriverElementId(root.getElement().getWinDriverElementId());
+        request.setFindOption(FindOption.FIND_ALL);
+        request.setConditionModels(conditions.getConditions());
+        return find(request);
+    }
+
     public <T extends WinDriverElement> T getWindow(PropertyConditions conditions) {
         Map result = findWindowsByCondition(conditions).getPayload().get(0);
+        return convertMapToWinDriverObject(result, winDriverElementType);
+    }
+
+    public <T extends WinDriverElement> T getWindowsByScopeOption (PropertyConditions conditions, SearchScopeOption scopeOption) {
+        Map result = findWindowsByScopeOption(conditions, scopeOption).getPayload().get(0);
+        return convertMapToWinDriverObject(result, winDriverElementType);
+    }
+
+    public <T extends WinDriverElement> T getWindowsByRootNode (PropertyConditions conditions, WinDriverElement root, SearchScopeOption scopeOption) {
+        Map result = findWindowsByRootNode(conditions, root, scopeOption).getPayload().get(0);
         return convertMapToWinDriverObject(result, winDriverElementType);
     }
 
